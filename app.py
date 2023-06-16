@@ -32,11 +32,11 @@ def write_post(blog_posts):
 
 
 @app.route('/')
-def index() -> str:
+def index():
     """
     Render home page, index.html
     Display a list of blog posts
-    returns: render index.html (str)
+    returns: render index.html
     with posts (List[Dict]) argument
     """
     return render_template('index.html', posts=read_posts_file())
@@ -51,7 +51,8 @@ def add_post(blog_posts: List[Dict]):
         'id': blog_posts[-1]['id'] + 1,
         'author': request.form.get('author', ''),
         'title': request.form.get('title', ''),
-        'content': request.form.get('content', '')
+        'content': request.form.get('content', ''),
+        'likes': 0
     })
 
 
@@ -120,7 +121,7 @@ def update_post(blog_posts: List[Dict], post_id: int):
         if post['id'] == post_id:
             post.update({'author': request.form.get('author', ''),
                          'title': request.form.get('title', ''),
-                         'content': request.form.get('content', '')
+                         'content': request.form.get('content', ''),
                          })
 
 
@@ -152,6 +153,31 @@ def update(post_id: int) -> tuple[str, int] | Response | str:
     # Else, it's a GET request
     # So display the update.html page
     return render_template('update.html', post=post)
+
+
+def update_likes(blog_posts: List[Dict], post_id: int):
+    """
+    Update likes value in the existing post
+    param blog_posts: List[Dict]
+    param post_id: int
+    """
+    for post in blog_posts:
+        if post['id'] == post_id:
+            post.update({'likes': post['likes'] + 1})
+
+
+@app.route('/like/<int:post_id>', methods=['POST'])
+def like(post_id: int) -> Response:
+    """
+    Increase the ‘likes’ value of the post with the given id,
+    and then redirect back to the index page.
+    param post_id: int
+    returns: redirect to index.html
+    """
+    blog_posts = read_posts_file()
+    update_likes(blog_posts, post_id)
+    write_post(blog_posts)
+    return redirect(url_for('index'))
 
 
 if __name__ == "__main__":

@@ -9,14 +9,17 @@
     <h1>Welcome to My Flask Blog!</h1>
     {% for post in posts %}
         <div class="post">
-            <h2>{{ post['title'] }}</h2>
-            <p><em>Written by {{ post['author'] }}</em></p>
-            <p>{{ post['content'] }}</p>
-            <form action="/update/{{ post['id'] }}" method="get">
-                <input type="submit" name="update" value="Update">
+            <h2>{{ post.title }}</h2>
+            <p><em>Written by {{ post.author }}</em></p>
+            <p>{{ post.content }}</p>
+            <form action="{{ url_for('update', post_id=post.id) }}" method="GET">
+                <input type="submit" name="update" value="Update" style="width:80px">
             </form>
-            <form action="/delete/{{ post['id'] }}" method="post">
-                <input type="submit" name="delete" value="Delete">
+            <form action="{{ url_for('delete', post_id=post.id) }}" method="POST">
+                <input type="submit" name="delete" value="Delete" style="width:80px">
+            </form>
+            <form action="{{ url_for('like', post_id=post.id) }}" method="POST">
+                <input type="submit" name="like" value="Like: {{ post.likes }}" style="width:80px">
             </form>
         </div>
     {% endfor %}
