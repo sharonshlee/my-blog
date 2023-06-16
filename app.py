@@ -121,7 +121,7 @@ def update_post(blog_posts: List[Dict], post_id: int):
         if post['id'] == post_id:
             post.update({'author': request.form.get('author', ''),
                          'title': request.form.get('title', ''),
-                         'content': request.form.get('content', ''),
+                         'content': request.form.get('content', '')
                          })
 
 
