@@ -47,8 +47,13 @@ def add_post(blog_posts: List[Dict]):
     Add post with info from add.html form
     param blog_posts: List[Dict]
     """
+    post_id = 1
+
+    if blog_posts:
+        post_id = blog_posts[-1]['id'] + 1
+
     blog_posts.append({
-        'id': blog_posts[-1]['id'] + 1,
+        'id': post_id,
         'author': request.form.get('author', ''),
         'title': request.form.get('title', ''),
         'content': request.form.get('content', ''),
